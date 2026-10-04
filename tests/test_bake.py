@@ -11,7 +11,7 @@ from tools import bake  # noqa: E402
 
 def make_repo(root):
     """Minimal repo skeleton with one dial per dimension."""
-    dirs = ["recipes/base", "recipes/flaws", "recipes/tones", "recipes/scenes", "build"]
+    dirs = ["recipes/base", "recipes/flaws", "recipes/tones", "recipes/scenes", "build", "build/personas"]
     for d in dirs:
         os.makedirs(os.path.join(root, d), exist_ok=True)
     files = {
@@ -23,6 +23,7 @@ def make_repo(root):
         "recipes/tones/density-tight.md": "# 腔调档：密度·紧凑（density-tight）\n",
         "recipes/scenes/artifacts.md": "# 场景：工件（commit、README）\n",
         "build/bans.md": "# 我的判死词表（个人层）\n",
+        "build/personas/fox-girl.md": "# 人格：狐娘·小雪（示例）\n",
     }
     for rel, text in files.items():
         with open(os.path.join(root, rel), "w", encoding="utf-8") as f:
@@ -71,6 +72,37 @@ class Resolve(unittest.TestCase):
             files, unpicked = bake.resolve({"tones": {"rhythm": "mixed"}}, repo=root)
             self.assertIn("density", unpicked)
             self.assertEqual(len(files), 2)  # base + rhythm only
+
+
+class Persona(unittest.TestCase):
+    def test_persona_worn_right_after_base(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = make_repo(d)
+            combo = {"flaws": ["anti-ai"], "persona": "fox-girl", "tones": {"rhythm": "mixed"}}
+            files, _ = bake.resolve(combo, repo=root)
+            self.assertEqual([f[0] for f in files], ["基座", "人格", "病灶", "腔调"])
+            self.assertEqual(files[1][1], "狐娘·小雪")
+            self.assertIn("人格：狐娘·小雪", bake.render_style(files))
+
+    def test_missing_persona_or_empty_string_means_plain(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = make_repo(d)
+            files, _ = bake.resolve({"flaws": ["anti-ai"], "persona": ""}, repo=root)
+            self.assertEqual([f[0] for f in files], ["基座", "病灶"])
+
+    def test_missing_persona_card_is_hard_error(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = make_repo(d)
+            with self.assertRaises(ValueError) as ctx:
+                bake.resolve({"persona": "ghost"}, repo=root)
+            self.assertIn("人格卡 ghost 不存在", str(ctx.exception))
+
+    def test_persona_must_be_single_string(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = make_repo(d)
+            with self.assertRaises(ValueError) as ctx:
+                bake.resolve({"persona": ["fox-girl", "butler"]}, repo=root)
+            self.assertIn("单值", str(ctx.exception))
 
 
 class Render(unittest.TestCase):

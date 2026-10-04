@@ -3,8 +3,10 @@
 
 For each of combo.json / bans.md / voice.md / policy.json: copy example ->
 build only when missing; existing files are never touched (they are your
-canon). Prints what it created and what it left alone, then reminds you to
-bake. TODO.md and runtime state files are yours alone, not scaffolded.
+canon). Persona cards under example/personas/ are copied into
+build/personas/ the same way, one file per card. Prints what it created and
+what it left alone, then reminds you to bake. TODO.md and runtime state
+files are yours alone, not scaffolded.
 
 Usage: python3 tools/init.py
 """
@@ -31,6 +33,20 @@ def init(example_dir=None, build_dir=None):
         else:
             shutil.copyfile(src, dst)
             created.append(name)
+    src_personas = os.path.join(example_dir, "personas")
+    if os.path.isdir(src_personas):
+        dst_personas = os.path.join(build_dir, "personas")
+        os.makedirs(dst_personas, exist_ok=True)
+        for fn in sorted(os.listdir(src_personas)):
+            if not fn.endswith(".md"):
+                continue
+            src = os.path.join(src_personas, fn)
+            dst = os.path.join(dst_personas, fn)
+            if os.path.exists(dst):
+                kept.append(f"personas/{fn}")
+            else:
+                shutil.copyfile(src, dst)
+                created.append(f"personas/{fn}")
     return created, kept
 
 

@@ -10,6 +10,7 @@ The model (or a tool importing the file) reads ONE file instead of
 thirteen. Compile-time checks enforce the constitution:
 
   - a tone dimension may only have one dial (mutual exclusion is structural),
+  - persona is a single card name under build/personas/ (you wear one at a time),
   - every referenced file must exist,
   - unknown dimensions / dials / layers are hard errors,
   - a tone dimension you did not pick is reported (that just means no opinion).
@@ -93,6 +94,15 @@ def resolve(combo, repo=None):
             errors.append(f"{what} 不存在：{path}")
 
     out = [("基座", "clarity（宪法加通则）", os.path.join(repo, "recipes", "base", "clarity.md"))]
+
+    persona = combo.get("persona")
+    if persona:
+        if not isinstance(persona, str):
+            errors.append("persona 是单值键（一次只穿一套人格），收到列表或对象")
+        else:
+            p = os.path.join(repo, "build", "personas", persona + ".md")
+            must_exist(p, f"人格卡 {persona}")
+            out.append(("人格", layer_desc(p), p))
 
     for name in combo.get("flaws", []):
         p = os.path.join(repo, "recipes", "flaws", name + ".md")
