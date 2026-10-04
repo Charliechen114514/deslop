@@ -1,0 +1,14 @@
+{
+  "flaws": ["anti-ai", "natural-chinese"],
+  "tones": {
+    "rhythm": "mixed",
+    "particles": "follow",
+    "address": "follow",
+    "emotion": "light",
+    "slang": "follow",
+    "density": "full",
+    "rhetoric": "plain"
+  },
+  "scenes": ["artifacts"],
+  "personal": ["bans", "voice"]
+}
