@@ -233,8 +233,10 @@ def main():
 
     if "--report" in args:
         print(f"词表规则 {len(rows)} 行：")
-        for src, cell, pat in rows:
-            print(f"  [{src}] {cell}")
+        names = {fn: n for n, fn in CONDITIONS.items()}
+        for src, cell, pat, cond in rows:
+            suffix = f"（{names.get(cond, cond)}）" if cond else ""
+            print(f"  [{src}] {cell}{suffix}")
         print(f"\nlint 正则 {len(patterns)} 条：")
         for note, pat, level, src in patterns:
             print(f"  [{src}] {note}（{level}）")

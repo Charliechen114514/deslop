@@ -66,6 +66,13 @@ class Resolve(unittest.TestCase):
             with self.assertRaises(ValueError):
                 bake.resolve({"flaws": ["ghost"]}, repo=root)
 
+    def test_dial_written_as_list_is_readable_error(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = make_repo(d)
+            with self.assertRaises(ValueError) as ctx:
+                bake.resolve({"tones": {"rhythm": ["mixed", "tight"]}}, repo=root)
+            self.assertIn("没有档位", str(ctx.exception))
+
     def test_unpicked_dimension_reported_not_fatal(self):
         with tempfile.TemporaryDirectory() as d:
             root = make_repo(d)

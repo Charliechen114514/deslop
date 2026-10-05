@@ -18,10 +18,10 @@
 
 ## 来试一下
 
-你需要 python3，然后让AI在仓库根目录跑三条命令：
+你需要 python3，然后让AI在仓库根目录跑两条命令，中间改一次 combo.json：
 
 ```bash
-python3 tools/init.py    # 生成 build/：combo.json、bans.md、voice.md、policy.json
+python3 tools/init.py    # 生成 build/：combo.json、bans.md、voice.md、policy.json、personas/
 # 改 build/combo.json，每个维度挑一个档（挂人格卡就加 "persona": "fox-girl"）
 python3 tools/bake.py    # 生成 build/style.md，模型只读这一份
 ```

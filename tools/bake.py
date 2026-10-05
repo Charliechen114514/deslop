@@ -117,7 +117,7 @@ def resolve(combo, repo=None):
         pick = tones.get(dim)
         if pick is None:
             continue  # no opinion on this dimension - legal, reported by caller
-        if pick not in dials:
+        if not isinstance(pick, str) or pick not in dials:
             errors.append(f"{dim} 没有档位 {pick}（可选：{'、'.join(sorted(dials))}）")
             continue
         p = dials[pick]
