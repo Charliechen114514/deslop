@@ -1,6 +1,6 @@
 # speak-understandable
 
-## TL; DR
+## 太长不看
 
 把 AI 的 **说话** 输出调成你要的风格。
 
