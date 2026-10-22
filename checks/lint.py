@@ -216,6 +216,8 @@ def self_test(rows, patterns):
         ("综上所述，未来充满无限可能。", "review", "综上"),
         ("本周持续赋能业务，拉通上下游。", "review", "赋能"),
         ("这方案清晰、简洁、有力、专业。", "review", "串珠"),
+        ("这哪是优化，这是重写。", "review", "反问"),
+        ("这点我认，先欠着。", "review", "姿态"),
         ("对这一份配置文件进行了一次检查。", "review", "假冠词"),
     ]
     for text, want_level, want_word in samples:
